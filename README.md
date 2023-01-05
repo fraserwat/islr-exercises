@@ -12,7 +12,7 @@ I was working through the textbook **Introduction to Statistical Learning with A
 - [x] 2. [Statistical Learning](02-statistical-learning.Rmd)
 - [x] 3. [Linear Regression](03-linear-regression.Rmd)
 - [ ] 4. Classification
-- [ ] 5. Resampling Methods
+- [ ] 5. [Resampling Methods](05-resampling-methods.Rmd)
 - [ ] 8. Tree-based Methods
 - [ ] 9. Support Vector Machines
 - [ ] 10. Unsupervised Learning
@@ -21,4 +21,5 @@ I was working through the textbook **Introduction to Statistical Learning with A
 
 - [ ] 6. Linear Model Selection and Regularisation
 - [ ] 7. Moving Beyond Linearity
+- [ ] Go back through each chapter and do the "Applied" questions as well.
 - [ ] Refactor .rmd files into Python Notebooks.

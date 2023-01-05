@@ -1,0 +1,29 @@
+---
+title: "Ch 5. Resampling Methods"
+author: "Fraser Watt"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. COME BACK TO THIS AFTER THE EXAM. INTERESTING BUT BEYOND THE SCOPE OF THE MODULE.
+
+## 2. COME BACK TO THIS AFTER THE EXAM. INTERESTING BUT BEYOND THE SCOPE OF THE MODULE.
+
+## 3. We now review how $k$-fold cross-validation is implemented.
+
+### (a) Explain how $k$-fold cross-validation is implemented.
+
+The samples are split into a predetermined number ($k$) of equally sized "folds". The model is trained on all but one of these folds, and that holdout set is used in place of a testing set. Having received $k$ error rates, you can then average the error rates. This gives you a more robust scoring than a standard train-test set. 
+
+### (b) What are the advantages and disadvantages of $k$-fold cross-validation relative to: the validation set approach and LOOCV.
+
+An advantage of the validation set is it lacks the high computational cost of $k$-fold cross-validation as the model only needs to be fitted to the data once (as opposed to $k$ times). On the other hand, validation sets use less data so may be difficult to carry out with small data sets. As the validation set almost acts as a "$k=1$ fold" cross validation, the performance of a model leaves a lot up to luck (could an enterprising researcher fix results with a specific seed?).
+
+"Leave One Out Cross Validation" addresses the downsides of $k$-fold cross-validation - the variance in error rate and the removal of a non-trivial portion of the data - but is incredibly computationally expensive. As you are effectively training $n$-folds, which is not practical for models where $n$ is large (would Facebook or YouTube train millions of CV models?).
+
+## 4. Suppose that we use some statistical learning method to make a prediction for the response $Y$ for a particular value of the predictor $X$. Carefully describe how we might estimate the standard deviation of our prediction.
+
+## COME BACK TO THIS AFTER THE EXAM. INTERESTING BUT BEYOND THE SCOPE OF THE MODULE.
