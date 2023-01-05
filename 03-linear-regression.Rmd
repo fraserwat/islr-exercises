@@ -1,0 +1,99 @@
+---
+title: "Ch 3. Linear Regression"
+author: "Fraser Watt"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### 1. Describe the null hypotheses to which the p-values given in Table 3.4 correspond. Explain what conclusions you can draw based on these p-values. Your explanation should be phrased in terms of sales, TV, radio, and newspaper, rather than in terms of the coefficients of the model.
+
+Copied over from _Table 3.4:_
+```{r}
+data.frame(
+    ad_channel = c("Intercept", "TV", "Radio", "Newspaper"),
+    coefficient = c(2.939, 0.046, 0.189, -0.001),
+    std_error = c(0.3119, 0.0014, 0.0086, 0.0059),
+    t_statistic = c(9.42, 32.81, 21.89, -0.18),
+    p_value = c(0.0001, 0.0001, 0.0001, 0.8599)
+)
+```
+
+For each of the different `ad_channel` values in the table above, there is a corresponding null hypothesis that there is no relationship between ad spend on that channel and company sales. For `TV` and `Radio`, we can conclude from the p-values that there is a statistically significant relationship between these channels and sales. For `Newspaper`, we lack sufficient evidence to reject the null hypothesis, so can assume there is no relationship between newspaper ad spend and sales.
+
+The `Intercept` row is slightly different, in that the null hypothesis is that without any ad spend on the three channels above (i.e. $TV=Radio=Newspaper=0$), sales would be at $0$. The p-value is sufficiently low enough that we can conclude with a degree of statistical significance that sales would not $=0$ if there was an ad spend of $0$.
+
+### 2. Carefully explain the differences between the KNN classifier and KNN regression methods.
+
+The difference between the KNN classifier and KNN regression method is that the KNN Classifier takes the label of the $K$ closest samples and classifying the test data with the class that occurs most frequently. The KNN Regressor instead takes the label of the $K$ closest samples (which in this case is a continuous, not discrete variable), and averages the response between these $K$ samples.
+
+Formula for **KNN Classifier:** $$\text{Pr}(Y=j, X=x_0) = \frac{1}{K}\sum_{x_i \in \mathcal{N}_0}  I(y_i = j)$$
+
+Formula for **KNN Regressor:** $$\hat f(x_0) =\frac{1}{K} \sum_{x_i \in \mathcal{N}_0} y_i$$
+
+_NB: $\mathcal{N}_0$ in both formulae represent the $K$ number of observations closest to $x_0$. The $I()$ in the classifier formula is an indicator function for $y$'s class, is 1 if $x_i$ is in class $j$, else is 0_.
+
+### 3. Suppose we have a data set with five predictors, $X_1=$GPA, $X_2=$IQ, $X_3=$Gender (1 for Female and 0 for Male), $X_4=$Interaction between GPA and IQ, and $X_5=$Interaction between GPA and Gender. The response is starting salary after graduation (in thousands of dollars). Suppose we use least squares to fit the model, and get $\beta_0=50, \ \beta_1=20, \ \beta_2=0.07, \ \beta_3=35 , \ \beta_4=0.01, \ \beta_5=-10$.
+
+**1. Which answer is correct, and why?**
+
+- For a fixed value of IQ and GPA, males earn more on average than females. 
+- For a fixed value of IQ and GPA, females earn more on average than males.
+- For a fixed value of IQ and GPA, males earn more on average than females provided that the GPA is high enough.
+- For a fixed value of IQ and GPA, females earn more on average than males provided that the GPA is high enough.
+
+The correct answer would be **For a fixed value of IQ and GPA, males earn more on average than females provided that the GPA is high enough.** To take the values from the next question (3.2), the same values with a man means our model predicts a $5,100 uplift. However, when you compare the same results between men and women but with the GPA changed from 4.0 to 1.0, then according to this model there is a $25,000 difference in the favour of the hypothetical woman over the hypothetical man. This is due to the influence of the interaction term between GPA and Gender.
+
+**2. Predict the salary of a female with IQ of 110 and a GPA of 4.0.**
+\begin{align*}
+\hat y &= \beta_0 + (\beta_1X_1) + (\beta_2X_2) + (\beta_3X_3) + (\beta_4X_4) + (\beta_5X_5) \\
+\hat y &= 50 + (20 * 4.0) + (0.07 * 110) + (35 * 1) + (0.01 * (4.0 * 110)) + (-10 * (4.0 * 1)) \\
+\hat y &= 50 + 80 + 7.7 + 35 + 4.4 + -40 \\ 
+\hat y &= 137.1
+\end{align*}
+
+The salary of a female with IQ of 110 and GPA of 4.0 would be $137,100.
+
+**3. True or false: Since the coefficient for the GPA/IQ interaction term is very small, there is very little evidence of an interaction effect. Justify your answer.**
+
+As the coefficient value is a modifier of absolute value, the impact it has on the final response is compeltely down to the scale used in $x_1, x_2,$ and $y$. Instead of the coefficient we should look at the t-value and p-values for evidence of an effect.
+
+### 4. I collect a set of data ($n=100$ observations) containing a single predictor and a quantitative response. I then fit a linear regression model to the data, as well as a separate cubic regression, i.e. $Y=\beta_0+\beta_1X+\beta_2X^2+\beta_3X^3+\epsilon$.
+
+**a. Suppose that the true relationship between $X$ and $Y$ is linear, i.e. $Y=\beta_0 + \beta_1X + \epsilon$. Consider the training residual sum of squares (RSS) for the linear regression, and also the training RSS for the cubic regression. Would we expect one to be lower than the other, would we expect them to be the same, or is there not enough information to tell? Justify your answer.**
+
+We would expect the training RSS to be lower for the cubic regression model. Despite a linear relationship between predictors and response, the cubic model is more flexible and able to fit the training data better and there will be less bias in the error term. Because the true relationship between $X$ and $Y$ is linear, this does mean that this better fit will be due to overfitting, and the lower bias has a trade-off of increased variance.
+
+**b. Answer (a) using test rather than training RSS.**
+
+As the true relationship between $X$ and $Y$ is linear, we would expect the RSS for the cubic regression to be higher than the RSS for the linear regression. This is because the cubic regression model assumes a polynomial ($X^3$) relationship, and will overfit to the training data. The cost of lower RSS in (a) is that a significant amount of variance is introduced into the error term, and the linear model will outperform the cubic one.
+
+**c. Suppose that the true relationship between $X$ and $Y$ is not linear, but we don't know how far it is from linear. Consider the training RSS for the linear regression, and also the training RSS for the cubic regression. Would we expect one to be lower than the other, would we expect them to be the same, or is there not enough information to tell? Justify your answer.**
+
+As a more flexible model can learn a tighter fit to a training set than a more linear one, we would still expect the cubic regression model to have a lower RSS for a non-linear relationship than the linear one. The distance between the linear RSS and the cubic RSS would be dependent on how far from linearity the "true $f$" is - the less linear the relationship, the bigger we would expect the gap between the cubic and linear RSS to be.
+
+**d. Answer (c) using test rather than training RSS.**
+
+We do not have enough information to answer this. Much like the gap between the linear and cubic RSS in (c) would be dependent on how non-linear the true relationship between predictors and response is, a highly non-linear reltaionship would mean that the cubic model would vastly outperform the linear model on the test set. However, a relationship that was nearly linear could have the cubic model return a higher RSS than the linear one.
+
+
+<!-- TODO: Go back to Questions 5-7 after the exams, very very unlikely they'll go into this much detail with formulae. -->
+
+### 5. Consider the fitted values that result from performing linear regression without an intercept. In this setting, the $i$th fitted value takes the form $\hat y_i = x_i \hat\beta$, where $$\hat\beta = \left( \sum^{n}_{i=1} x_iy_i \right) / \left( \sum^{n}_{i'=1} x^2_{i'} \right).$$ Show that we can write $$\hat y_i = \sum^n_{i'1} a_{i'}y_{i'}.$$ What is $a_{i'}$?
+
+_Note: We interpret this result by saying that the fitted values from linear regression are linear combinations of the response values._
+
+### 6. Using the formulas for the parameter estimates below, argue that in the case of simple linear regression, the least squares line always passes through the point ($\bar x, \bar y$).
+
+### 7. It is claimed in the text that in the case of simple linear regression of $Y$ onto $X$, the $R^2$ statistic is equal to the square of the corrrelation between $X$ and $Y$. Prove that this is the case. For simplicity, you may assume that $\bar x = \bar y = 0$.
+
+Assuming this claim is correct, then
+\begin{align*}
+ 1-\frac{\sum(y_i - \hat y_i)^2}{\sum(y_i - \bar y)^2} &= 
+ \left(\frac{\sum(x_i - \bar x)(y_i - \bar i)}{\sqrt{\sum(x_i - \bar x)^2 \sum(y_i - \bar y)^2 }}\right)^2 \\
+ \text{Allowing for } \bar x = \bar y = 0 ... \\
+ 1-\frac{\sum y_i^2}{\sum y_i^2} &= 
+ \left(\frac{\sum x_iy_i}{\sqrt{\sum x_i^2 \sum y_i^2 }}\right)^2 
+\end{align*}
